@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SuperTokens, {
   getSuperTokensRoutesForReactRouterDom,
-  SuperTokensWrapper
-} from 'supertokens-auth-react';
-import Session from 'supertokens-auth-react/recipe/session';
+  SuperTokensWrapper,
+} from "supertokens-auth-react";
+import Session, { SessionAuth } from "supertokens-auth-react/recipe/session";
 import ThirdPartyEmailPassword, {
-  ThirdPartyEmailPasswordAuth,
-} from 'supertokens-auth-react/recipe/thirdpartyemailpassword';
-import './App.css';
-import Footer from './Footer';
-import Home from './Home';
-import SessionExpiredPopup from './SessionExpiredPopup';
+  ThirdpartyEmailPasswordComponentsOverrideProvider,
+} from "supertokens-auth-react/recipe/thirdpartyemailpassword";
+import "./App.css";
+import Footer from "./Footer";
+import Home from "./Home";
+import SessionExpiredPopup from "./SessionExpiredPopup";
 
 export function getApiDomain() {
   const apiPort = process.env.REACT_APP_API_PORT || 4000;
@@ -34,30 +34,17 @@ SuperTokens.init({
   },
   recipeList: [
     ThirdPartyEmailPassword.init({
-      override: {
-        components: {
-          ThirdPartySignInAndUpProvidersForm_Override: ({ DefaultComponent, ...props }) => {
-            return (
-              <div>
-                <label>
-                  {"Tenant ID: "}
-                  <input id="saml-tenant" type="text" name="tenant" defaultValue={"app1.com"} />
-                </label>
-                <DefaultComponent {...props} />
-              </div>
-            );
-          }
-        }
-      },
       preAPIHook: async (context) => {
         let url = new URL(context.url);
         let action = context.action;
 
-        if (action === 'GET_AUTHORISATION_URL') {
-          let tenantId = document.querySelector("#supertokens-root").shadowRoot.getElementById("saml-tenant").value;
-          localStorage.setItem("saml-tenant-id", tenantId)
-          url.searchParams.append('tenant', tenantId);
-          url.searchParams.append('product', 'supertokens');
+        if (action === "GET_AUTHORISATION_URL") {
+          let tenantId = document
+            .querySelector("#supertokens-root")
+            .shadowRoot.getElementById("saml-tenant").value;
+          localStorage.setItem("saml-tenant-id", tenantId);
+          url.searchParams.append("tenant", tenantId);
+          url.searchParams.append("product", "supertokens");
         }
 
         if (action === 'THIRD_PARTY_SIGN_IN_UP') {
@@ -91,34 +78,60 @@ function App() {
 
   return (
     <SuperTokensWrapper>
-      <div className="App">
-        <Router>
-          <div className="fill">
-            <Routes>
-              {/* This shows the login UI on "/auth" route */}
-              {getSuperTokensRoutesForReactRouterDom(require('react-router-dom'))}
+      <ThirdpartyEmailPasswordComponentsOverrideProvider
+        components={{
+          ThirdPartySignInAndUpProvidersForm_Override: ({
+            DefaultComponent,
+            ...props
+          }) => {
+            return (
+              <div>
+                <label>
+                  {"Tenant ID: "}
+                  <input
+                    id="saml-tenant"
+                    type="text"
+                    name="tenant"
+                    defaultValue={"app1.com"}
+                  />
+                </label>
+                <DefaultComponent {...props} />
+              </div>
+            );
+          },
+        }}
+      >
+        <div className="App">
+          <Router>
+            <div className="fill">
+              <Routes>
+                {/* This shows the login UI on "/auth" route */}
+                {getSuperTokensRoutesForReactRouterDom(
+                  require("react-router-dom")
+                )}
 
-              <Route
-                path="/"
-                element={
-                  /* This protects the "/" route so that it shows
-                                    <Home /> only if the user is logged in.
-                                    Else it redirects the user to "/auth" */
-                  <ThirdPartyEmailPasswordAuth
-                    onSessionExpired={() => {
-                      updateShowSessionExpiredPopup(true);
-                    }}
-                  >
-                    <Home />
-                    {showSessionExpiredPopup && <SessionExpiredPopup />}
-                  </ThirdPartyEmailPasswordAuth>
-                }
-              />
-            </Routes>
-          </div>
-          <Footer />
-        </Router>
-      </div>
+                <Route
+                  path="/"
+                  element={
+                    /* This protects the "/" route so that it shows
+                  <Home /> only if the user is logged in.
+                  Else it redirects the user to "/auth" */
+                    <SessionAuth
+                      onSessionExpired={() => {
+                        updateShowSessionExpiredPopup(true);
+                      }}
+                    >
+                      <Home />
+                      {showSessionExpiredPopup && <SessionExpiredPopup />}
+                    </SessionAuth>
+                  }
+                />
+              </Routes>
+            </div>
+            <Footer />
+          </Router>
+        </div>
+      </ThirdpartyEmailPasswordComponentsOverrideProvider>
     </SuperTokensWrapper>
   );
 }
