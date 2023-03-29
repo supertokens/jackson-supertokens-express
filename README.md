@@ -1,4 +1,4 @@
-# SAML Jackson + SuperTokens Demo App
+# SAML Jackson SSO by BoxyHQ + SuperTokens Demo App
 
 This demo app shows how to integrate [SAML Jackson](https://github.com/boxyhq/jackson) in a Node + React app that uses SuperTokens for user authentication. Both SAML Jackson and Supertokens are self-hosted but can also work with hosted versions.
 
