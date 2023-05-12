@@ -15,6 +15,6 @@
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
     "pg": "^8.7.1",
-    "supertokens-node": "^11.0.0"
+    "supertokens-node": "^14.0.2"
   }
 }
