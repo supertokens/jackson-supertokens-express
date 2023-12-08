@@ -33,6 +33,8 @@ docker run \
   -e DB_ENGINE="sql" \
   -e DB_TYPE="postgres" \
   -e DB_URL="postgres://<PSQL_USER>:<PSQL_PASSWORD>@<PSQL_HOST>:5432/boxyhq" \
+  -e NEXTAUTH_SECRET="super-secret" \
+  -e NEXTAUTH_ADMIN_CREDENTIALS="admin@company.com:secretpassword" \
   -d boxyhq/jackson
 ```
 

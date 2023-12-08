@@ -39,6 +39,11 @@ app.get("/tenants", async (req, res) => {
     res.send(tenants);
 });
 
+app.post("/scim", async (req, res) => {
+    console.log("TODO")
+    res.send("Success");
+})
+
 // In case of session related errors, this error handler
 // returns 401 to the client.
 app.use(errorHandler());

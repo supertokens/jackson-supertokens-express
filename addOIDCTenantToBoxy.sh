@@ -1,0 +1,12 @@
+curl --location --request POST 'http://localhost:5225/api/v1/connections' \
+--header 'Authorization: Api-Key secret' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'defaultRedirectUrl=http://localhost:3000/auth/callback/saml-jackson' \
+--data-urlencode 'redirectUrl=["http://localhost:3000/*"]' \
+--data-urlencode 'oidcDiscoveryUrl=https://accounts.google.com/.well-known/openid-configuration' \
+--data-urlencode 'oidcClientId=427132789766-j0i7girhqflopmcqg94arfd1l4b4hv6q.apps.googleusercontent.com' \
+--data-urlencode 'oidcClientSecret=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' \
+--data-urlencode "tenant=$1" \
+--data-urlencode 'product=supertokens' \
+--data-urlencode 'name=supertokens-config' \
+--data-urlencode 'description=SuperTokens + BOXYHQ SAML config'
