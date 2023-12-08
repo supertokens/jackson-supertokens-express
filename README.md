@@ -44,7 +44,6 @@ The above command will generates a client ID and a client secret for tenant3. Yo
 
 ```bash
 <TODO: GENERATED FROM RUNNING addTenant.sh>
-<TODO: GENERATED FROM RUNNING addTenant.sh>
 ```
 in `setup-tenants-supertokens.sh` and then:
 
