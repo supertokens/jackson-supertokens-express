@@ -60,23 +60,12 @@ npm run start
 This demo app uses mocksaml.com as a SAML provider. Open [http://localhost:3000](http://localhost:3000) to see the demo. If you pick `tenant3`, you will see the SAML login button, which will log you in via mocksaml.com
 
 ## Manually adding a SAML provider
-### Configure SAML Identity Provider
+### 1) Configure SAML Identity Provider
 Follow the [doc](https://boxyhq.com/docs/jackson/configure-saml-idp). You will then need to download the SAML metadata file after configuring the SAML app with your Identity Provider. Okta is a good place and offers a free Developer Account. Feel free to contact us if you need any help with this.
 
-### Add SAML Config
+### 2) Add the SAML provider as a login method in SuperTokens
 
-Replace `<Metadata>` with the your metadata content.
-
-```bash
-curl --location --request POST 'http://localhost:5225/api/v1/saml/config' \
-  --header 'Authorization: Api-Key secret' \
-  --header 'Content-Type: application/x-www-form-urlencoded' \
-  --data-urlencode 'rawMetadata= <Metadata>' \
-  --data-urlencode 'defaultRedirectUrl=http://localhost:3000' \
-  --data-urlencode 'redirectUrl=["http://localhost:3000/*"]' \
-  --data-urlencode 'tenant=boxyhq.com' \
-  --data-urlencode 'product=supertokens'
-```
+Refer to [our docs on supertokens.com](https://supertokens.com/docs/thirdpartyemailpassword/common-customizations/saml/with-boxyhq/integration-steps) to see how to configure and add your SAML connections.
 
 ## Try the Demo
 Open [http://localhost:3000](http://localhost:3000) to try the demo. Choose `tenant3` and then click on the button `Continue with SAML Jackson`.
