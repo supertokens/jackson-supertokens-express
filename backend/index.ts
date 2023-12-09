@@ -45,7 +45,6 @@ app.get("/tenants", async (req, res) => {
 app.post("/scim", async (req, res, next) => {
     try {
         // TODO: auth..
-        console.log(req.body)
         let payload = req.body;
         let tenant = payload.tenant;
         let directoryId = payload.directory_id;
