@@ -1,4 +1,4 @@
-# SAML Jackson + SuperTokens Demo App
+# SAML Jackson + SuperTokens Demo App + SCIM (Directory sync)
 
 This demo app shows how to integrate [SAML Jackson](https://github.com/boxyhq/jackson) in a Node + React app that uses [SuperTokens](https://supertokens.com) for user authentication. Both SAML Jackson and Supertokens are self-hosted but can also work with hosted versions.
 
@@ -42,12 +42,12 @@ docker run \
 ./addTenant.sh tenant3
 ```
 
-The above command will generates a client ID and a client secret for tenant3. You should take those values and replace:
+The above command will add a new SAML provider to `tenant3` and will generate a client ID and a client secret for this provider and tenant. This will then be used by SuperTokens to login via this SAML provider. You should take the generated client ID and secret and replace the below string with them:
 
 ```bash
 <TODO: GENERATED FROM RUNNING addTenant.sh>
 ```
-in `setup-tenants-supertokens.sh` and then:
+in `setup-tenants-supertokens.sh`.
 
 ```bash
 ./setup-tenants-supertokens.sh
@@ -68,6 +68,30 @@ Follow the [doc](https://boxyhq.com/docs/jackson/configure-saml-idp). You will t
 ### 2) Add the SAML provider as a login method in SuperTokens
 
 Refer to [our docs on supertokens.com](https://supertokens.com/docs/thirdpartyemailpassword/common-customizations/saml/with-boxyhq/integration-steps) to see how to configure and add your SAML connections.
+
+## 3) Testing SCIM (Directory sync)
+In this demo app, we have added directory sync with Google Workspaces. In order to set that up, you need to start boxyhq with the following additional env vars:
+
+```
+DSYNC_GOOGLE_CLIENT_ID=
+DSYNC_GOOGLE_CLIENT_SECRET=
+DSYNC_GOOGLE_REDIRECT_URI=http://localhost:5225/api/scim/oauth/callback
+```
+- To generate a `DSYNC_GOOGLE_CLIENT_ID` and `DSYNC_GOOGLE_CLIENT_SECRET`, follow [this guide](https://boxyhq.com/docs/directory-sync/providers/google).
+- Make sure to set the value of `DSYNC_GOOGLE_REDIRECT_URI` to point to your boxyHQ instance instead of `localhost:5225` if needed.
+
+Once you have done the above, navigate to the [BoxyHQ admin portal](http://localhost:5225), and click on Directory Sync -> Connections section. There, create a new directory for Google:
+- Directory Name: Google Workspaces (this can be anything)
+- Directory Provider: Google
+- Directory Domain: (Leave this empty)
+- Tenant: `tenant3` (we use this in our example - it corresponds to `tenant3` in SuperTokens)
+- Product: `supertokens`
+- Webhook URL: `http://localhost:3001/scim` (This is an API we have created in `backend/index.ts`)
+- Webhook secret: `abcd1234` (We will use this for webhook authentication)
+
+Once created, you will see a URL at the bottom of the screen: `http://localhost:5225/api/scim/oauth/authorize?directoryId=...` you need to navigate to that on your browser and login as the admin of your Google workspaces account. This will generate an access and refresh token which can then be used by BoxyHQ to sync users from Google Workspaces.
+
+To initiate a sync, send a `GET` request to `http://localhost:5225/api/v1/dsync/cron/sync-google`. This will sync all users from Google Workspaces to BoxyHQ, and in turn BoxyHQ will call our node webhook (`http://localhost:3001/scim`) with the [relevant events](https://boxyhq.com/docs/directory-sync/events) which we can use to create users in SuperTokens.
 
 ## Try the Demo
 Open [http://localhost:3000](http://localhost:3000) to try the demo. Choose `tenant3` and then click on the button `Continue with SAML Jackson`.

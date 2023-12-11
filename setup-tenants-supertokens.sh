@@ -86,18 +86,17 @@ curl --location --request PUT 'http://localhost:3567/tenant3/recipe/multitenancy
 }'
 
 curl --location --request PUT 'http://localhost:3567/tenant3/recipe/multitenancy/config/thirdparty' \
---header 'api-key: <API_KEY(if configured)>' \
 --header 'Content-Type: application/json' \
 --data-raw '{
   "config": {
-    "thirdPartyId": "boxy-saml-google-workspaces",
-    "name": "Google workspaces",
+    "thirdPartyId": "google-workspaces",
+    "name": "Google Workspaces",
     "clients": [
       {
-        "clientId": "<TODO: GENERATED FROM RUNNING addOIDCTenantToBoxy>",
-        "clientSecret": "<TODO: GENERATED FROM RUNNING addOIDCTenantToBoxy>",
+        "clientId": "1060725074195-kmeum4crr01uirfl2op9kd5acmi9jutn.apps.googleusercontent.com",
+        "clientSecret": "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",
         "additionalConfig": {
-          "boxyURL": "http://localhost:5225"
+            "hd": "*"
         }
       }
     ]

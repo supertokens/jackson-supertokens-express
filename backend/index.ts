@@ -88,7 +88,7 @@ app.post("/scim", async (req, res, next) => {
             let currDir = respData[i];
             if (currDir.id === directoryId) {
                 if (currDir.type === "google") {
-                    thirdPartyId = "boxy-saml-google-workspaces";
+                    thirdPartyId = "google-workspaces";
                 }
             }
         }
