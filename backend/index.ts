@@ -7,6 +7,7 @@ import { getWebsiteDomain, SuperTokensConfig } from "./config";
 import Multitenancy from "supertokens-node/recipe/multitenancy";
 import axios from "axios";
 import { thirdPartyManuallyCreateOrUpdateUser } from "supertokens-node/recipe/thirdpartyemailpassword";
+import crypto from "crypto"
 
 supertokens.init(SuperTokensConfig);
 
@@ -44,7 +45,34 @@ app.get("/tenants", async (req, res) => {
 
 app.post("/scim", async (req, res, next) => {
     try {
-        // TODO: auth..
+        const secret = 'abcd1234';
+
+        // The signature header from the webhook request.
+        const signatureHeader = req.headers["boxyhq-signature"];
+
+        if (typeof signatureHeader !== 'string') {
+            throw new Error("Missing signature header");
+        }
+
+        // JSON body from the webhook request.
+        const body = req.body;
+
+        const [t, s] = signatureHeader.split(',');
+
+        const signature = t.split('=')[1];
+        const timestamp = s.split('=')[1];
+
+        const signedPayload = `${timestamp}.${JSON.stringify(body)}`;
+
+        const expectedSignature = crypto
+            .createHmac('sha256', secret)
+            .update(signedPayload)
+            .digest('hex');
+
+        // Compare the expectedSignature to the signature
+        if (signature !== expectedSignature) {
+            throw new Error("Bad request signature")
+        }
         let payload = req.body;
         let tenant = payload.tenant;
         let directoryId = payload.directory_id;
