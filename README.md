@@ -69,7 +69,7 @@ Follow the [doc](https://boxyhq.com/docs/jackson/configure-saml-idp). You will t
 
 Refer to [our docs on supertokens.com](https://supertokens.com/docs/thirdpartyemailpassword/common-customizations/saml/with-boxyhq/integration-steps) to see how to configure and add your SAML connections.
 
-## 3) Testing SCIM (Directory sync)
+## Testing SCIM (Directory sync)
 In this demo app, we have added directory sync with Google Workspaces. In order to set that up, you need to start boxyhq with the following additional env vars:
 
 ```
