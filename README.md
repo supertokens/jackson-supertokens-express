@@ -26,13 +26,11 @@ docker run -p 3567:3567 -d registry.supertokens.io/supertokens/supertokens-postg
 ```
 
 ```bash
-# start boxyhq with connected to psql db called boxyhq
+# start boxyhq with in memory db
 docker run \
   -p 5225:5225 \
   -e JACKSON_API_KEYS="secret" \
-  -e DB_ENGINE="sql" \
-  -e DB_TYPE="postgres" \
-  -e DB_URL="postgres://<PSQL_USER>:<PSQL_PASSWORD>@<PSQL_HOST>:5432/boxyhq" \
+  -e DB_ENGINE="mem" \
   -e NEXTAUTH_SECRET="super-secret" \
   -e NEXTAUTH_ADMIN_CREDENTIALS="admin@company.com:secretpassword" \
   -d boxyhq/jackson

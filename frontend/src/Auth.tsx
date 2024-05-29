@@ -5,8 +5,7 @@ import { TenantSelector } from "./TenantSelector";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import * as reactRouterDom from "react-router-dom";
 import React from "react";
-import { ThirdpartyEmailPasswordComponentsOverrideProvider } from "supertokens-auth-react/recipe/thirdpartyemailpassword";
-import { ThirdpartyPasswordlessComponentsOverrideProvider } from "supertokens-auth-react/recipe/thirdpartypasswordless";
+import { AuthRecipeComponentsOverrideContextProvider } from "supertokens-auth-react/ui";
 
 type ChangeTenantsButtonProps = {
     setHasSelectedTenantId: React.Dispatch<React.SetStateAction<boolean>>;
@@ -45,9 +44,9 @@ export const Auth = () => {
         new URLSearchParams(location.search).has("tenantId")
     ) {
         return (
-            <ThirdpartyEmailPasswordComponentsOverrideProvider
+            <AuthRecipeComponentsOverrideContextProvider
                 components={{
-                    EmailPasswordSignInFooter_Override: ({ DefaultComponent, ...props }) => {
+                    AuthPageFooter_Override: ({ DefaultComponent, ...props }) => {
                         return (
                             <div>
                                 <DefaultComponent {...props} />
@@ -57,32 +56,19 @@ export const Auth = () => {
                     },
                 }}
             >
-                <ThirdpartyPasswordlessComponentsOverrideProvider
-                    components={{
-                        PasswordlessSignInUpFooter_Override: ({ DefaultComponent, ...props }) => {
-                            return (
-                                <div>
-                                    <DefaultComponent {...props} />
-                                    <ChangeTenantsButton setHasSelectedTenantId={setHasSelectedTenantId} />
-                                </div>
-                            );
-                        },
-                    }}
-                >
-                    <div className="App app-container">
-                        <div className="fill">
-                            <Routes>
-                                {/* This shows the login UI on "/auth" route */}
-                                {getSuperTokensRoutesForReactRouterDom(
-                                    require("react-router-dom"),
-                                    PreBuiltUIList,
-                                    "/auth"
-                                )}
-                            </Routes>
-                        </div>
+                <div className="App app-container">
+                    <div className="fill">
+                        <Routes>
+                            {/* This shows the login UI on "/auth" route */}
+                            {getSuperTokensRoutesForReactRouterDom(
+                                require("react-router-dom"),
+                                PreBuiltUIList,
+                                "/auth"
+                            )}
+                        </Routes>
                     </div>
-                </ThirdpartyPasswordlessComponentsOverrideProvider>
-            </ThirdpartyEmailPasswordComponentsOverrideProvider>
+                </div>
+            </AuthRecipeComponentsOverrideContextProvider>
         );
     } else {
         return <TenantSelector setHasSelectedTenantId={setHasSelectedTenantId} />;

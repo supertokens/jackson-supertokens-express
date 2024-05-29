@@ -6,7 +6,7 @@ import { middleware, errorHandler, SessionRequest } from "supertokens-node/frame
 import { getWebsiteDomain, SuperTokensConfig } from "./config";
 import Multitenancy from "supertokens-node/recipe/multitenancy";
 import axios from "axios";
-import { thirdPartyManuallyCreateOrUpdateUser } from "supertokens-node/recipe/thirdpartyemailpassword";
+import { manuallyCreateOrUpdateUser } from "supertokens-node/recipe/thirdparty";
 import crypto from "crypto"
 
 supertokens.init(SuperTokensConfig);
@@ -99,7 +99,7 @@ app.post("/scim", async (req, res, next) => {
         if (payload.event === "user.created") {
             let email = payload.data.email;
             let thirdPartyUserId = payload.data.id;
-            await thirdPartyManuallyCreateOrUpdateUser(tenant, thirdPartyId, thirdPartyUserId, email, true);
+            await manuallyCreateOrUpdateUser(tenant, thirdPartyId, thirdPartyUserId, email, true);
         } else if (payload.event === "user.deleted") {
             let thirdPartyUserId = payload.data.id;
             let user = await supertokens.listUsersByAccountInfo(tenant, {
