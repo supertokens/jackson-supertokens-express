@@ -7,6 +7,15 @@ curl --location --request POST 'http://localhost:3567/recipe/dashboard/user' \
 curl --location --request PUT 'http://localhost:3567/recipe/multitenancy/tenant' \
 --header 'Content-Type: application/json' \
 --data-raw '{
+    "tenantId": "public",
+    "emailPasswordEnabled": true,
+    "thirdPartyEnabled": false,
+    "passwordlessEnabled": false
+}'
+
+curl --location --request PUT 'http://localhost:3567/recipe/multitenancy/tenant' \
+--header 'Content-Type: application/json' \
+--data-raw '{
     "tenantId": "tenant1",
     "emailPasswordEnabled": true,
     "thirdPartyEnabled": true,
